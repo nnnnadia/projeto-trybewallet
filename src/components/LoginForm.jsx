@@ -72,15 +72,15 @@ class LoginForm extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  saveUserEmail: (email) => dispatch(actSaveUserEmail(email)),
-});
-
 LoginForm.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
   saveUserEmail: PropTypes.func.isRequired,
 };
+
+const mapDispatchToProps = (dispatch) => ({
+  saveUserEmail: (email) => dispatch(actSaveUserEmail(email)),
+});
 
 export default connect(null, mapDispatchToProps)(LoginForm);
