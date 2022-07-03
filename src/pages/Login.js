@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import LoginForm from '../components/LoginForm';
+import { LoginForm } from '../components';
 
 class Login extends Component {
   render() {

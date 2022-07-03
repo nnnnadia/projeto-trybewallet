@@ -1,4 +1,4 @@
-import SAVE_USER_EMAIL from '../actions/actionTypes';
+import { SAVE_USER_EMAIL } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
   email: '',
