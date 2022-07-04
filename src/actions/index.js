@@ -5,6 +5,7 @@ import {
   SAVE_EXPENSE,
   REQUEST_EXCHANGE_RATES,
   RECEIVE_EXCHANGE_RATES,
+  UPDATE_TOTAL_EXPENSES,
 } from './actionTypes';
 
 export const actSaveUserEmail = (email) => ({
@@ -52,9 +53,14 @@ const actReceiveExchangeRates = (exchangeRates) => ({
   },
 });
 
+const actUpdateTotalExpenses = () => ({
+  type: UPDATE_TOTAL_EXPENSES,
+});
+
 export const fetchExchangeRates = () => async (dispatch) => {
   dispatch(actRequestExchangeRates());
   const response = await fetch('https://economia.awesomeapi.com.br/json/all');
   const exchangeRates = await response.json();
-  return dispatch(actReceiveExchangeRates(exchangeRates));
+  dispatch(actReceiveExchangeRates(exchangeRates));
+  return dispatch(actUpdateTotalExpenses());
 };

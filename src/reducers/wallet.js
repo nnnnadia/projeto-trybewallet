@@ -3,6 +3,7 @@ import {
   RECEIVE_CURRENCIES_INITIALS,
   SAVE_EXPENSE,
   RECEIVE_EXCHANGE_RATES,
+  UPDATE_TOTAL_EXPENSES,
 } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
@@ -47,6 +48,16 @@ const wallet = (state = INITIAL_STATE, { type, payload }) => {
         },
       ],
     };
+  case UPDATE_TOTAL_EXPENSES: {
+    const total = state.expenses
+      .map((expObj) => expObj.value * expObj.exchangeRates[expObj.currency].ask)
+      .reduce((acc, curr) => acc + curr);
+    // const roundedTotal = (Math.round(rawTotal * 100) / 100).toFixed(2);
+    return {
+      ...state,
+      totalExpenses: total.toFixed(2),
+    };
+  }
   default:
     return state;
   }

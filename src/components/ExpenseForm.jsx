@@ -115,13 +115,13 @@ class ExpenseForm extends Component {
           <select
             id="currency"
             name="currency"
+            value={ currency }
             onChange={ handleInputChange }
           >
             { currencies.map((coin) => (
               <option
                 key={ coin }
                 value={ coin }
-                selected={ coin === currency }
               >
                 { coin }
               </option>
@@ -130,6 +130,7 @@ class ExpenseForm extends Component {
         </label>
         <select
           name="method"
+          value={ method }
           onChange={ handleInputChange }
           data-testid="method-input"
         >
@@ -137,7 +138,6 @@ class ExpenseForm extends Component {
             <option
               key={ index }
               value={ payment }
-              selected={ payment === method }
             >
               { payment }
             </option>
@@ -145,6 +145,7 @@ class ExpenseForm extends Component {
         </select>
         <select
           name="tag"
+          value={ tag }
           onChange={ handleInputChange }
           data-testid="tag-input"
         >
@@ -152,7 +153,6 @@ class ExpenseForm extends Component {
             <option
               key={ index }
               value={ category }
-              selected={ category === tag }
             >
               { category }
             </option>
