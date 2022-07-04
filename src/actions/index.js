@@ -2,6 +2,9 @@ import {
   SAVE_USER_EMAIL,
   REQUEST_CURRENCIES_INITIALS,
   RECEIVE_CURRENCIES_INITIALS,
+  SAVE_EXPENSE,
+  REQUEST_EXCHANGE_RATES,
+  RECEIVE_EXCHANGE_RATES,
 } from './actionTypes';
 
 export const actSaveUserEmail = (email) => ({
@@ -29,4 +32,29 @@ export const fetchCurrenciesInitials = () => async (dispatch) => {
   const currencies = Object.keys(rawCurrencies)
     .filter((currCode) => currCode !== 'USDT');
   return dispatch(actReceiveCurrenciesInitials(currencies));
+};
+
+export const actSaveExpense = (expense) => ({
+  type: SAVE_EXPENSE,
+  payload: {
+    expense,
+  },
+});
+
+const actRequestExchangeRates = () => ({
+  type: REQUEST_EXCHANGE_RATES,
+});
+
+const actReceiveExchangeRates = (exchangeRates) => ({
+  type: RECEIVE_EXCHANGE_RATES,
+  payload: {
+    exchangeRates,
+  },
+});
+
+export const fetchExchangeRates = () => async (dispatch) => {
+  dispatch(actRequestExchangeRates());
+  const response = await fetch('https://economia.awesomeapi.com.br/json/all');
+  const exchangeRates = await response.json();
+  return dispatch(actReceiveExchangeRates(exchangeRates));
 };

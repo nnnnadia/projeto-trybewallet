@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { actSaveExpense, fetchExchangeRates } from '../actions';
 
 class ExpenseForm extends Component {
+  initialExpense = {
+    value: 0,
+    currency: 'USD',
+    description: '',
+    method: 'Dinheiro',
+    tag: 'Alimentação',
+  };
+
   state = {
-    expense: {
-      value: 0,
-      description: '',
-      method: '',
-      tag: '',
-    },
+    expense: this.initialExpense,
     availableMethods: [
       'Dinheiro',
       'Cartão de crédito',
@@ -22,11 +26,57 @@ class ExpenseForm extends Component {
       'Transporte',
       'Saúde',
     ],
-  }; // id, value, currency, method, tag, description e exchangeRates
+  };
+
+  /*
+  selecionaría sempre a primeira opção do select
+  caso currency não fosse assícrono...
+  componentDidMount() {
+    const {
+      state: {
+        expense,
+        availableMethods,
+        availableTags,
+      },
+      props: {
+        currencies,
+      },
+    } = this;
+    this.setState({ expense: {
+      ...expense,
+      currency: currencies[0],
+      method: availableMethods[0],
+      tag: availableTags[0],
+    } });
+  }
+  */
 
   handleInputChange = ({ target }) => {
     const { name, value } = target;
-    this.setState({ [name]: value });
+    const { expense } = this.state;
+    this.setState({ expense: {
+      ...expense,
+      [name]: value,
+    } });
+  }
+
+  handleSubmitExpense = (e) => {
+    e.preventDefault();
+    const {
+      state: { expense },
+      props: {
+        savedExpenses,
+        saveExpense,
+        fetchRates,
+      },
+      initialExpense,
+    } = this;
+    saveExpense({
+      ...expense,
+      id: savedExpenses.length,
+    });
+    fetchRates();
+    this.setState({ expense: initialExpense });
   }
 
   render() {
@@ -35,6 +85,9 @@ class ExpenseForm extends Component {
         expense: {
           value,
           description,
+          currency,
+          method,
+          tag,
         },
         availableMethods,
         availableTags,
@@ -43,9 +96,12 @@ class ExpenseForm extends Component {
         currencies,
       },
       handleInputChange,
+      handleSubmitExpense,
     } = this;
     return (
-      <form>
+      <form
+        onSubmit={ (e) => e.preventDefault() }
+      >
         <input
           type="number"
           step="10"
@@ -59,40 +115,46 @@ class ExpenseForm extends Component {
           <select
             id="currency"
             name="currency"
+            onChange={ handleInputChange }
           >
-            { currencies.map((currency) => (
+            { currencies.map((coin) => (
               <option
-                key={ currency }
-                value={ currency }
+                key={ coin }
+                value={ coin }
+                selected={ coin === currency }
               >
-                { currency }
+                { coin }
               </option>
             )) }
           </select>
         </label>
         <select
           name="method"
+          onChange={ handleInputChange }
           data-testid="method-input"
         >
-          { availableMethods.map((method, index) => (
+          { availableMethods.map((payment, index) => (
             <option
               key={ index }
-              value={ method }
+              value={ payment }
+              selected={ payment === method }
             >
-              { method }
+              { payment }
             </option>
           ))}
         </select>
         <select
           name="tag"
+          onChange={ handleInputChange }
           data-testid="tag-input"
         >
-          { availableTags.map((tag, index) => (
+          { availableTags.map((category, index) => (
             <option
               key={ index }
-              value={ tag }
+              value={ category }
+              selected={ category === tag }
             >
-              { tag }
+              { category }
             </option>
           ))}
         </select>
@@ -103,6 +165,12 @@ class ExpenseForm extends Component {
           onChange={ handleInputChange }
           data-testid="description-input"
         />
+        <button
+          type="submit"
+          onClick={ handleSubmitExpense }
+        >
+          Adicionar despesa
+        </button>
       </form>
     );
   }
@@ -112,10 +180,21 @@ ExpenseForm.propTypes = {
   currencies: PropTypes.arrayOf(
     PropTypes.string,
   ).isRequired,
+  savedExpenses: PropTypes.arrayOf(
+    PropTypes.shape({}),
+  ).isRequired,
+  saveExpense: PropTypes.func.isRequired,
+  fetchRates: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   currencies: state.wallet.currencies,
+  savedExpenses: state.wallet.expenses,
 });
 
-export default connect(mapStateToProps)(ExpenseForm);
+const mapDispatchToProps = (dispatch) => ({
+  saveExpense: (expense) => dispatch(actSaveExpense(expense)),
+  fetchRates: () => dispatch(fetchExchangeRates()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExpenseForm);
