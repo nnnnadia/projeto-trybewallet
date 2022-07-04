@@ -16,7 +16,7 @@ class Header extends Component {
       <header>
         <h4 data-testid="email-field">{ email }</h4>
         <h4 data-testid="total-field">
-          { total }
+          { total || 0 }
         </h4>
         <span data-testid="header-currency-field">
           { currency }
