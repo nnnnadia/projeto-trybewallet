@@ -52,7 +52,6 @@ const wallet = (state = INITIAL_STATE, { type, payload }) => {
     const total = state.expenses
       .map((expObj) => expObj.value * expObj.exchangeRates[expObj.currency].ask)
       .reduce((acc, curr) => acc + curr);
-    // const roundedTotal = (Math.round(rawTotal * 100) / 100).toFixed(2);
     return {
       ...state,
       totalExpenses: total.toFixed(2),
