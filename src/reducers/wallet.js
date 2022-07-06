@@ -4,11 +4,11 @@ import {
   SAVE_EXPENSE,
   RECEIVE_EXCHANGE_RATES,
   UPDATE_TOTAL_EXPENSES,
+  DELETE_EXPENSE,
 } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
   currencies: [],
-  isFetching: false,
   expenses: [],
   currentExchangeRate: {},
   totalExpenses: 0,
@@ -19,13 +19,11 @@ const wallet = (state = INITIAL_STATE, { type, payload }) => {
   case REQUEST_CURRENCIES_INITIALS:
     return {
       ...state,
-      isFetching: true,
     };
   case RECEIVE_CURRENCIES_INITIALS:
     return {
       ...state,
       currencies: payload.currencies,
-      isFetching: false,
     };
   case SAVE_EXPENSE:
     return {
@@ -49,12 +47,19 @@ const wallet = (state = INITIAL_STATE, { type, payload }) => {
       ],
     };
   case UPDATE_TOTAL_EXPENSES: {
-    const total = state.expenses
+    const total = state.expenses.length > 0 ? state.expenses
       .map((expObj) => expObj.value * expObj.exchangeRates[expObj.currency].ask)
-      .reduce((acc, curr) => acc + curr);
+      .reduce((acc, curr) => acc + curr)
+      : 0;
     return {
       ...state,
       totalExpenses: total.toFixed(2),
+    };
+  }
+  case DELETE_EXPENSE: {
+    return {
+      ...state,
+      expenses: state.expenses.filter((expense) => expense.id !== payload.id),
     };
   }
   default:

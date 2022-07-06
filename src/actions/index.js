@@ -6,6 +6,7 @@ import {
   REQUEST_EXCHANGE_RATES,
   RECEIVE_EXCHANGE_RATES,
   UPDATE_TOTAL_EXPENSES,
+  DELETE_EXPENSE,
 } from './actionTypes';
 
 export const actSaveUserEmail = (email) => ({
@@ -53,7 +54,7 @@ const actReceiveExchangeRates = (exchangeRates) => ({
   },
 });
 
-const actUpdateTotalExpenses = () => ({
+export const actUpdateTotalExpenses = () => ({
   type: UPDATE_TOTAL_EXPENSES,
 });
 
@@ -64,3 +65,10 @@ export const fetchExchangeRates = () => async (dispatch) => {
   dispatch(actReceiveExchangeRates(exchangeRates));
   return dispatch(actUpdateTotalExpenses());
 };
+
+export const actDeleteExpense = (id) => ({
+  type: DELETE_EXPENSE,
+  payload: {
+    id,
+  },
+});

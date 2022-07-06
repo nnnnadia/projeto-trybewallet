@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { actUpdateTotalExpenses } from '../actions';
 
 class Header extends Component {
   state = {
@@ -9,9 +10,10 @@ class Header extends Component {
 
   render() {
     const {
-      props: { email, total },
+      props: { email, total, updateTotalExpenses },
       state: { currency },
     } = this;
+    updateTotalExpenses();
     return (
       <header>
         <h4 data-testid="email-field">{ email }</h4>
@@ -32,6 +34,7 @@ Header.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
+  updateTotalExpenses: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
@@ -43,4 +46,8 @@ const mapStateToProps = (state) => ({
   total: state.wallet.totalExpenses,
 });
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = (dispatch) => ({
+  updateTotalExpenses: () => dispatch(actUpdateTotalExpenses()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
