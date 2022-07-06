@@ -32,10 +32,15 @@ class ExpensesTable extends Component {
               method,
             }) => {
               const valueToFixed = (+value).toFixed(2);
-              const unabbreviatedCurrency = exchangeRates[currency].name
-                .split('/Real Brasileiro')[0];
-              const exchange = (+exchangeRates[currency].ask).toFixed(2);
-              const convertedValue = (value * exchangeRates[currency].ask).toFixed(2);
+              const unabbreviatedCurrency = exchangeRates
+                ? exchangeRates[currency].name.split('/Real Brasileiro')[0]
+                : null;
+              const exchange = exchangeRates
+                ? (+exchangeRates[currency].ask).toFixed(2)
+                : null;
+              const convertedValue = exchangeRates
+                ? (value * exchangeRates[currency].ask).toFixed(2)
+                : null;
               return (
                 <tr key={ id }>
                   <td>{ valueToFixed }</td>
